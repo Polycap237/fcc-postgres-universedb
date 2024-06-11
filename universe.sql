@@ -16,17 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE universe;
+DROP DATABASE worldcup;
 --
--- Name: universe; Type: DATABASE; Schema: -; Owner: freecodecamp
+-- Name: worldcup; Type: DATABASE; Schema: -; Owner: freecodecamp
 --
 
-CREATE DATABASE universe WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
+CREATE DATABASE worldcup WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
 
 
-ALTER DATABASE universe OWNER TO freecodecamp;
+ALTER DATABASE worldcup OWNER TO freecodecamp;
 
-\connect universe
+\connect worldcup
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -44,289 +44,217 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: galaxy; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: games; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.galaxy (
-    galaxy_id integer NOT NULL,
-    name character varying NOT NULL,
-    description text,
-    has_life boolean,
-    galaxy_type character varying NOT NULL,
-    distance_from_earth numeric,
-    temperature integer,
-    age_in_millions_of_years integer
+CREATE TABLE public.games (
+    game_id integer NOT NULL,
+    year integer NOT NULL,
+    round character varying(255) NOT NULL,
+    winner_id integer NOT NULL,
+    opponent_id integer NOT NULL,
+    winner_goals integer NOT NULL,
+    opponent_goals integer NOT NULL
 );
 
 
-ALTER TABLE public.galaxy OWNER TO freecodecamp;
+ALTER TABLE public.games OWNER TO freecodecamp;
 
 --
--- Name: galaxy_property; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: games_game_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.galaxy_property (
-    galaxy_property_id integer NOT NULL,
-    name character varying NOT NULL,
-    property_value text,
-    measurable boolean,
-    description text,
-    temperature integer,
-    age_in_millions_of_years integer,
-    galaxy_id integer
+CREATE SEQUENCE public.games_game_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.games_game_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: games_game_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.games_game_id_seq OWNED BY public.games.game_id;
+
+
+--
+-- Name: teams; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.teams (
+    team_id integer NOT NULL,
+    name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE public.galaxy_property OWNER TO freecodecamp;
+ALTER TABLE public.teams OWNER TO freecodecamp;
 
 --
--- Name: moon; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: teams_team_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.moon (
-    moon_id integer NOT NULL,
-    name character varying NOT NULL,
-    description text,
-    moon_type character varying NOT NULL,
-    is_habitable boolean,
-    distance_from_earth numeric,
-    orbit_duration integer,
-    temperature integer,
-    planet_id integer
-);
+CREATE SEQUENCE public.teams_team_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
-ALTER TABLE public.moon OWNER TO freecodecamp;
+ALTER TABLE public.teams_team_id_seq OWNER TO freecodecamp;
 
 --
--- Name: planet; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: teams_team_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.planet (
-    planet_id integer NOT NULL,
-    name character varying NOT NULL,
-    description text,
-    planet_type character varying NOT NULL,
-    has_atmosphere boolean,
-    distance_from_earth numeric,
-    gravity integer,
-    temperature integer,
-    star_id integer
-);
-
-
-ALTER TABLE public.planet OWNER TO freecodecamp;
-
---
--- Name: star; Type: TABLE; Schema: public; Owner: freecodecamp
---
-
-CREATE TABLE public.star (
-    star_id integer NOT NULL,
-    name character varying NOT NULL,
-    description text,
-    age_in_millions_of_years integer,
-    is_spherical boolean,
-    distance_from_earth numeric,
-    temperature integer,
-    galaxy_id integer
-);
-
-
-ALTER TABLE public.star OWNER TO freecodecamp;
-
---
--- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
---
-
-INSERT INTO public.galaxy VALUES (1, 'Milky Way', 'The galaxy containing our Solar System.', false, 'Spiral', 26000, 34, NULL);
-INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The nearest major galaxy to the Milky Way.', false, 'Spiral', 253000, 55, NULL);
-INSERT INTO public.galaxy VALUES (3, 'Messier 87', 'A massive elliptical galaxy in the Virgo Cluster.', false, 'Elliptical', 543000, 33, NULL);
-INSERT INTO public.galaxy VALUES (4, 'Triangulum', 'A small galaxy in the Local Group.', false, 'Spiral', 3000000, NULL, NULL);
-INSERT INTO public.galaxy VALUES (5, 'Centaurus A', 'A peculiar galaxy with an active galactic nucleus.', false, 'Elliptical', 13000000, 21, NULL);
-INSERT INTO public.galaxy VALUES (6, 'Whirlpool Galaxy', 'A spiral galaxy known for its prominent spiral arms.', false, 'Spiral', 31000000, 15, NULL);
+ALTER SEQUENCE public.teams_team_id_seq OWNED BY public.teams.team_id;
 
 
 --
--- Data for Name: galaxy_property; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Name: games game_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.galaxy_property VALUES (1, 'Size', 'Large', false, 'The galaxy is considered large in size.', 22, NULL, 1);
-INSERT INTO public.galaxy_property VALUES (2, 'Spectral Type', 'Spiral', false, 'The galaxy has a spiral spectral type.', 44, NULL, 2);
-INSERT INTO public.galaxy_property VALUES (3, 'Brightness', 'High', false, 'The galaxy appears bright in the sky.', 66, NULL, 1);
-INSERT INTO public.galaxy_property VALUES (4, 'Redshift', '0.03', true, 'The galaxy has a redshift value of 0.03.', 43, NULL, 4);
-INSERT INTO public.galaxy_property VALUES (5, 'Metallicity', 'High', false, 'The galaxy has a high metallicity.', 91, NULL, 3);
+ALTER TABLE ONLY public.games ALTER COLUMN game_id SET DEFAULT nextval('public.games_game_id_seq'::regclass);
 
 
 --
--- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Name: teams team_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.moon VALUES (1, 'Moon', 'The Earths only natural satellite.', 'Rocky', false, 384400, 27, -20, 3);
-INSERT INTO public.moon VALUES (2, 'Phobos', 'The larger moon of Mars.', 'Rocky', false, 9377, 0, -40, 4);
-INSERT INTO public.moon VALUES (3, 'Deimos', 'The smaller moon of Mars.', 'Rocky', false, 23458, 1, -50, 4);
-INSERT INTO public.moon VALUES (4, 'Europa', 'One of Jupiters moons, believed to have an ocean beneath its icy crust.', 'Rocky', true, 628300, 4, -160, 5);
-INSERT INTO public.moon VALUES (5, 'Titan', 'Saturns largest moon, known for its thick atmosphere.', 'Rocky', false, 12570, 15, 90, 6);
-INSERT INTO public.moon VALUES (6, 'Ganymede', 'The largest moon in the Solar System, orbiting Jupiter.', 'Rocky', false, 10704, 7, -163, 5);
-INSERT INTO public.moon VALUES (7, 'Callisto', 'A moon of Jupiter, known for its ancient and heavily cratered surface.', 'Rocky', false, 18827, 17, 45, 5);
-INSERT INTO public.moon VALUES (8, 'Triton', 'Neptunes largest moon', 'Rocky', false, 354759, -6, -235, 8);
-INSERT INTO public.moon VALUES (9, 'Charon', 'The largest moon of Pluto, forming a binary system with it.', 'Rocky', false, 19591, 6, -218, 9);
-INSERT INTO public.moon VALUES (10, 'Luna', 'The largest moon of the planet Luna.', 'Rocky', false, 0, 0, -273, 10);
-INSERT INTO public.moon VALUES (11, 'Gliese 581g', 'An exomoon orbiting the exoplanet Gliese 581d.', 'Rocky', true, 223, 2, 44, 11);
-INSERT INTO public.moon VALUES (12, 'PSR B1257+12 A', 'A moon of the pulsar PSR B1257+12.', 'Rocky', false, 344, 3, 23, 12);
-INSERT INTO public.moon VALUES (13, 'HAT-P-1b', 'A hot gas giant exomoon.', 'Rocky', false, 645, 4, 17, 10);
-INSERT INTO public.moon VALUES (14, 'HD 189733b', 'A hot gas giant exomoon.', 'Rocky', false, 843, 6, 66, 11);
-INSERT INTO public.moon VALUES (15, 'TrES-2b', 'A gas giant exomoon.', 'Rocky', false, 23, 7, 65, 1);
-INSERT INTO public.moon VALUES (16, 'WASP-12b', 'A hot gas giant exomoon.', 'Rocky', false, 43, 3, 33, 7);
-INSERT INTO public.moon VALUES (17, 'HD 209458b', 'A hot gas giant exomoon.', 'Rocky', false, 234, 2, 44, 6);
-INSERT INTO public.moon VALUES (18, 'Kepler-16b', 'An exomoon orbiting the binary star Kepler-16.', 'Rocky', false, 543, 6, 99, 8);
-INSERT INTO public.moon VALUES (19, 'Kepler-22b', 'An exomoon orbiting the star Kepler-22.', 'Rocky', false, 345, 7, 33, 9);
-INSERT INTO public.moon VALUES (20, 'Kepler-69c', 'An exomoon orbiting the star Kepler-69.', 'Rocky', false, 565, 2, 22, 2);
+ALTER TABLE ONLY public.teams ALTER COLUMN team_id SET DEFAULT nextval('public.teams_team_id_seq'::regclass);
 
 
 --
--- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.planet VALUES (1, 'Mercury', 'The smallest planet in our Solar System.', 'Terrestrial', false, 48000000, 4, 800, 1);
-INSERT INTO public.planet VALUES (2, 'Venus', 'The hottest planet in our Solar System.', 'Terrestrial', true, 38000000, 9, 735, 1);
-INSERT INTO public.planet VALUES (3, 'Earth', 'The third planet from the Sun, the home of humans.', 'Terrestrial', true, 0, 10, 288, 1);
-INSERT INTO public.planet VALUES (4, 'Mars', 'The fourth planet from the Sun, often called the Red Planet.', 'Terrestrial', true, 54000000, 4, -63, 2);
-INSERT INTO public.planet VALUES (5, 'Jupiter', 'The largest planet in our Solar System.', 'Gas Giant', true, 588000000, 25, -145, 3);
-INSERT INTO public.planet VALUES (6, 'Saturn', 'The second-largest planet in our Solar System, known for its rings.', 'Gas Giant', true, 1200000000, 10, -178, 3);
-INSERT INTO public.planet VALUES (7, 'Uranus', 'The seventh planet from the Sun, characterized by its unique tilted axis.', 'Ice Giant', true, 2600000000, 9, -216, 4);
-INSERT INTO public.planet VALUES (8, 'Neptune', 'The eighth and farthest planet from the Sun.', 'Ice Giant', true, 4300000000, 11, -214, 4);
-INSERT INTO public.planet VALUES (9, 'Pluto', 'A dwarf planet in our Solar System.', 'Dwarf', false, 5900000000, 1, -229, 2);
-INSERT INTO public.planet VALUES (10, 'Kepler-452b', 'An exoplanet orbiting the star Kepler-452.', 'Terrestrial', true, NULL, 355, 44, 3);
-INSERT INTO public.planet VALUES (11, 'HD 189733b', 'A hot gas giant exoplanet.', 'Gas Giant', true, NULL, 22, 5, 1);
-INSERT INTO public.planet VALUES (12, 'TRAPPIST-1e', 'An exoplanet orbiting the star TRAPPIST-1.', 'Terrestrial', true, NULL, 22, 4, 2);
-
-
---
--- Data for Name: star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
---
-
-INSERT INTO public.star VALUES (1, 'Sun', 'The star at the center of our Solar System.', 4600, true, NULL, 5778, 1);
-INSERT INTO public.star VALUES (2, 'Proxima Centauri', 'The closest known star to the Sun.', 6000, false, NULL, 3042, 2);
-INSERT INTO public.star VALUES (3, 'Betelgeuse', 'A red supergiant star in the constellation Orion.', 8000, false, NULL, 3600, 1);
-INSERT INTO public.star VALUES (4, 'Sirius', 'The brightest star in the night sky.', 250, true, NULL, 9940, 2);
-INSERT INTO public.star VALUES (5, 'Alpha Centauri A', 'The primary component of the closest star system to the Sun.', 6000, true, NULL, 5790, 2);
-INSERT INTO public.star VALUES (6, 'Polaris', 'The North Star, located at the end of the handle of the Little Dipper.', 70, true, NULL, 5896, 1);
-
-
---
--- Name: galaxy galaxy_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy
-    ADD CONSTRAINT galaxy_name_key UNIQUE (name);
-
-
---
--- Name: galaxy galaxy_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy
-    ADD CONSTRAINT galaxy_pkey PRIMARY KEY (galaxy_id);
+INSERT INTO public.games VALUES (65, 2018, 'Final', 238, 239, 4, 2);
+INSERT INTO public.games VALUES (66, 2018, 'Third Place', 240, 241, 2, 0);
+INSERT INTO public.games VALUES (67, 2018, 'Semi-Final', 239, 241, 2, 1);
+INSERT INTO public.games VALUES (68, 2018, 'Semi-Final', 238, 240, 1, 0);
+INSERT INTO public.games VALUES (69, 2018, 'Quarter-Final', 239, 242, 3, 2);
+INSERT INTO public.games VALUES (70, 2018, 'Quarter-Final', 241, 243, 2, 0);
+INSERT INTO public.games VALUES (71, 2018, 'Quarter-Final', 240, 244, 2, 1);
+INSERT INTO public.games VALUES (72, 2018, 'Quarter-Final', 238, 245, 2, 0);
+INSERT INTO public.games VALUES (73, 2018, 'Eighth-Final', 241, 246, 2, 1);
+INSERT INTO public.games VALUES (74, 2018, 'Eighth-Final', 243, 247, 1, 0);
+INSERT INTO public.games VALUES (75, 2018, 'Eighth-Final', 240, 248, 3, 2);
+INSERT INTO public.games VALUES (76, 2018, 'Eighth-Final', 244, 249, 2, 0);
+INSERT INTO public.games VALUES (77, 2018, 'Eighth-Final', 239, 250, 2, 1);
+INSERT INTO public.games VALUES (78, 2018, 'Eighth-Final', 242, 251, 2, 1);
+INSERT INTO public.games VALUES (79, 2018, 'Eighth-Final', 245, 252, 2, 1);
+INSERT INTO public.games VALUES (80, 2018, 'Eighth-Final', 238, 253, 4, 3);
+INSERT INTO public.games VALUES (81, 2014, 'Final', 254, 253, 1, 0);
+INSERT INTO public.games VALUES (82, 2014, 'Third Place', 255, 244, 3, 0);
+INSERT INTO public.games VALUES (83, 2014, 'Semi-Final', 253, 255, 1, 0);
+INSERT INTO public.games VALUES (84, 2014, 'Semi-Final', 254, 244, 7, 1);
+INSERT INTO public.games VALUES (85, 2014, 'Quarter-Final', 255, 256, 1, 0);
+INSERT INTO public.games VALUES (86, 2014, 'Quarter-Final', 253, 240, 1, 0);
+INSERT INTO public.games VALUES (87, 2014, 'Quarter-Final', 244, 246, 2, 1);
+INSERT INTO public.games VALUES (88, 2014, 'Quarter-Final', 254, 238, 1, 0);
+INSERT INTO public.games VALUES (89, 2014, 'Eighth-Final', 244, 257, 2, 1);
+INSERT INTO public.games VALUES (90, 2014, 'Eighth-Final', 246, 245, 2, 0);
+INSERT INTO public.games VALUES (91, 2014, 'Eighth-Final', 238, 258, 2, 0);
+INSERT INTO public.games VALUES (92, 2014, 'Eighth-Final', 254, 259, 2, 1);
+INSERT INTO public.games VALUES (93, 2014, 'Eighth-Final', 255, 249, 2, 1);
+INSERT INTO public.games VALUES (94, 2014, 'Eighth-Final', 256, 260, 2, 1);
+INSERT INTO public.games VALUES (95, 2014, 'Eighth-Final', 253, 247, 1, 0);
+INSERT INTO public.games VALUES (96, 2014, 'Eighth-Final', 240, 261, 2, 1);
 
 
 --
--- Name: galaxy_property galaxy_property_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.galaxy_property
-    ADD CONSTRAINT galaxy_property_name_key UNIQUE (name);
-
-
---
--- Name: galaxy_property galaxy_property_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.galaxy_property
-    ADD CONSTRAINT galaxy_property_pkey PRIMARY KEY (galaxy_property_id);
-
-
---
--- Name: moon moon_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.moon
-    ADD CONSTRAINT moon_name_key UNIQUE (name);
-
-
---
--- Name: moon moon_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.moon
-    ADD CONSTRAINT moon_pkey PRIMARY KEY (moon_id);
+INSERT INTO public.teams VALUES (238, 'France');
+INSERT INTO public.teams VALUES (239, 'Croatia');
+INSERT INTO public.teams VALUES (240, 'Belgium');
+INSERT INTO public.teams VALUES (241, 'England');
+INSERT INTO public.teams VALUES (242, 'Russia');
+INSERT INTO public.teams VALUES (243, 'Sweden');
+INSERT INTO public.teams VALUES (244, 'Brazil');
+INSERT INTO public.teams VALUES (245, 'Uruguay');
+INSERT INTO public.teams VALUES (246, 'Colombia');
+INSERT INTO public.teams VALUES (247, 'Switzerland');
+INSERT INTO public.teams VALUES (248, 'Japan');
+INSERT INTO public.teams VALUES (249, 'Mexico');
+INSERT INTO public.teams VALUES (250, 'Denmark');
+INSERT INTO public.teams VALUES (251, 'Spain');
+INSERT INTO public.teams VALUES (252, 'Portugal');
+INSERT INTO public.teams VALUES (253, 'Argentina');
+INSERT INTO public.teams VALUES (254, 'Germany');
+INSERT INTO public.teams VALUES (255, 'Netherlands');
+INSERT INTO public.teams VALUES (256, 'Costa Rica');
+INSERT INTO public.teams VALUES (257, 'Chile');
+INSERT INTO public.teams VALUES (258, 'Nigeria');
+INSERT INTO public.teams VALUES (259, 'Algeria');
+INSERT INTO public.teams VALUES (260, 'Greece');
+INSERT INTO public.teams VALUES (261, 'United States');
 
 
 --
--- Name: planet planet_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: games_game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.planet
-    ADD CONSTRAINT planet_name_key UNIQUE (name);
-
-
---
--- Name: planet planet_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.planet
-    ADD CONSTRAINT planet_pkey PRIMARY KEY (planet_id);
+SELECT pg_catalog.setval('public.games_game_id_seq', 96, true);
 
 
 --
--- Name: star star_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: teams_team_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.star
-    ADD CONSTRAINT star_name_key UNIQUE (name);
-
-
---
--- Name: star star_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.star
-    ADD CONSTRAINT star_pkey PRIMARY KEY (star_id);
+SELECT pg_catalog.setval('public.teams_team_id_seq', 261, true);
 
 
 --
--- Name: galaxy_property galaxy_property_galaxy_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: games games_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.galaxy_property
-    ADD CONSTRAINT galaxy_property_galaxy_id_fkey FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
-
-
---
--- Name: moon moon_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.moon
-    ADD CONSTRAINT moon_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_pkey PRIMARY KEY (game_id);
 
 
 --
--- Name: planet planet_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: teams teams_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.planet
-    ADD CONSTRAINT planet_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id);
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_name_key UNIQUE (name);
 
 
 --
--- Name: star star_galaxy_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.star
-    ADD CONSTRAINT star_galaxy_id_fkey FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_pkey PRIMARY KEY (team_id);
+
+
+--
+-- Name: games games_opponent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_opponent_id_fkey FOREIGN KEY (opponent_id) REFERENCES public.teams(team_id);
+
+
+--
+-- Name: games games_winner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.games
+    ADD CONSTRAINT games_winner_id_fkey FOREIGN KEY (winner_id) REFERENCES public.teams(team_id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+
+
 
